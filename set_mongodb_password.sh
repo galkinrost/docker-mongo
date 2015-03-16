@@ -6,7 +6,11 @@ gosu mongodb mongod &
 sleep 3
 
 # create db and admin user
-mongo $MONGO_DB --eval "db.updateUser('$MONGO_USER',{pwd:'$MONGO_PASSWORD',roles:['dbAdmin']})"
+mongo $MONGO_DB --eval "try{ \
+        db.createUser({user:'$MONGO_USER', pwd:'$MONGO_PASSWORD',roles:['dbAdmin']}); \
+    }catch(e){ \
+        print(e); \
+    }"
 
 gosu mongodb mongod --shutdown
 
